@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/ibm-plex-sans";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'IBM Plex Sans Variable', ui-sans-serif, system-ui, sans-serif;
+    --color-over: var(--over);
+    --color-under: var(--under);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* Brand green (logo #148A38) on a faintly green-tinted neutral surface. */
+    --background: #f5f7f6;
+    --foreground: #14211a;
+    --card: #ffffff;
+    --card-foreground: #14211a;
+    --popover: #ffffff;
+    --popover-foreground: #14211a;
+    --primary: #148a38;
+    --primary-foreground: #ffffff;
+    --secondary: #e9efeb;
+    --secondary-foreground: #14211a;
+    --muted: #eef2ef;
+    --muted-foreground: #57665c;
+    --accent: #e3f1e7;
+    --accent-foreground: #0d5a24;
+    --destructive: #b42318;
+    --border: #d9e0db;
+    --input: #c9d3cc;
+    --ring: #148a38;
+    --radius: 0.5rem;
+    /* Sign of forecast error: over-forecast vs under-forecast (validated as a CVD-safe pair). */
+    --over: #b26b00;
+    --under: #2f67b1;
+    --chart-1: #148a38;
+    --chart-2: #b26b00;
+    --chart-3: #2f67b1;
+    --chart-4: #57665c;
+    --chart-5: #14211a;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #14211a;
+    --sidebar-primary: #148a38;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #e3f1e7;
+    --sidebar-accent-foreground: #0d5a24;
+    --sidebar-border: #d9e0db;
+    --sidebar-ring: #148a38;
+}
+
+.dark {
+    --background: #0e1511;
+    --foreground: #eef3ef;
+    --card: #151e18;
+    --card-foreground: #eef3ef;
+    --popover: #151e18;
+    --popover-foreground: #eef3ef;
+    --primary: #2fb255;
+    --primary-foreground: #04120a;
+    --secondary: #1f2b23;
+    --secondary-foreground: #eef3ef;
+    --muted: #1f2b23;
+    --muted-foreground: #9aaba0;
+    --accent: #1a3524;
+    --accent-foreground: #b9ecca;
+    --destructive: #f0716a;
+    --border: rgb(255 255 255 / 10%);
+    --input: rgb(255 255 255 / 15%);
+    --ring: #2fb255;
+    --chart-1: #2fb255;
+    --chart-2: #e0953a;
+    --chart-3: #6b9be0;
+    --chart-4: #9aaba0;
+    --chart-5: #eef3ef;
+    --sidebar: #121a15;
+    --sidebar-foreground: #eef3ef;
+    --sidebar-primary: #2fb255;
+    --sidebar-primary-foreground: #04120a;
+    --sidebar-accent: #1a3524;
+    --sidebar-accent-foreground: #b9ecca;
+    --sidebar-border: rgb(255 255 255 / 10%);
+    --sidebar-ring: #2fb255;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    }
+  body {
+    @apply bg-background text-foreground;
+    }
+  html {
+    @apply font-sans;
+    }
+}

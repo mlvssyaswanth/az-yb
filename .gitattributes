@@ -1,0 +1,5 @@
+# Shell scripts and files copied into Linux containers must keep LF line endings, even when
+# Git for Windows checks out with core.autocrlf=true; bash in WSL or Linux rejects CRLF.
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.conf text eol=lf

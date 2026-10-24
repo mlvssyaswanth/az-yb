@@ -1,0 +1,74 @@
+# Required settings fail fast with a clear message instead of starting with blanks.
+x-database-url: &database-url postgresql+psycopg://${POSTGRES_USER:?set POSTGRES_USER in .env}:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/${POSTGRES_DB:?set POSTGRES_DB in .env}
+
+services:
+  db:
+    image: timescale/timescaledb:2.30.2-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    ports:
+      # Loopback only: the database is for local tools, not the network.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      # Over TCP on purpose: on first start the image runs a temporary init server that answers
+      # on the Unix socket only and then shuts down, so a socket check can pass too early.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
+
+  # One-shot job: applies migrations, then refreshes Elexon data that is older than
+  # INGEST_FRESHNESS_HOURS. If Elexon is down but data was loaded before, the app still starts.
+  ingest:
+    build: ./backend
+    command: ["sh", "-c", "alembic upgrade head && python -m app.ingest.load --allow-stale"]
+    environment:
+      DATABASE_URL: *database-url
+      ELEXON_BASE_URL: ${ELEXON_BASE_URL:-https://data.elexon.co.uk/bmrs/api/v1}
+      INGEST_FRESHNESS_HOURS: ${INGEST_FRESHNESS_HOURS:-24}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: *database-url
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:5173}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      ingest:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+      start_interval: 1s
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  db-data:

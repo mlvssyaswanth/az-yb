@@ -1,0 +1,29 @@
+[project]
+name = "energy-forecast-backend"
+version = "0.1.0"
+description = "API and ingestion for UK wind forecast vs actual analysis (Elexon BMRS)"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.143.0",
+    "uvicorn[standard]==0.54.0",
+    "sqlalchemy==2.1.4",
+    "alembic==1.20.0",
+    "psycopg[binary]==3.3.6",
+    "pydantic-settings==2.15.0",
+    "pandas==3.0.6",
+    "httpx==0.28.1",
+    "tzdata==2026.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
